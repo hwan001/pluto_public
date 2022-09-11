@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+<head>
+    {% include 'head.html' %}
+    
+    <script> 
+        var ticker = '{{ticker}}';
+        var url = '{{url}}';
+    </script>        
+</head>
+
+<body class="bg-white">
+    {% include 'header.html' %}
+
+    <div class="graph3">
+        <h2>Pluto Stock Recommand - {{ticker}}</h2> 
+    </div>
+
+    <div class="container">
+
+        <div class="align-items-center">
+            <form action="{{url}}/graph" method ="POST">
+                시작일 : 
+                <input type="edit" id="startdate" name="startdate">
+                <!--input type="edit" id="enddate" name="enddate"-->
+
+                <select name="interval" class="form-select" aria-label=".form-select-sm"> 
+                    <!--option value="none">== 주기 선택 ==</option-->
+                    <option value="1d">하루</option>
+                    <option value="1mo">한달</option> 
+                    <option value="1y">일년</option>
+                </select>
+
+                <select name="kind" class="form-select" aria-label=".form-select-sm">
+                    <!--option value="none">=== 그래프 종류 선택 ===</option-->
+                    <option value="Close">종가</option>
+                    <!--option value="Adj Close">조정된 종가</option-->
+                </select>
+
+                <input type="search" id="ticker" name="ticker">
+                <button class="btn-check">Search</button>
+            </form>
+        </div> 
+
+        <div class="align-items-center">
+            Ticker : {{ticker}}  
+            <canvas id="{{ticker}}"></canvas>
+        </div>
+    </div>
+
+    {% include 'footer.html' %}
+
+    <!-- 차트 -->
+    <script>
+        var ticker_index = "{{ ticker_index|safe }}".replace("[", "").replace("]", "").replace(" ", "").split(",");
+        var ticker_value = "{{ ticker_value|safe }}".replace("[", "").replace("]", "").replace(" ", "").split(",");
+        var aver_step = "{{aver_step}}"
+
+        var chart = new Chart(document.getElementById(ticker).getContext('2d'), {
+        type: 'line',
+        data: {
+            labels: ticker_index,
+            datasets: [{
+            label: 'Close Price',
+            backgroundColor: 'transparent',
+            borderColor: 'gold',
+            data: ticker_value,
+            }]
+        },
+        options: {
+            scales: {
+	    		yAxes: [{
+	    			ticks: {
+	    				stepSize : aver_step,
+	    				fontSize : 12,
+		    		}
+		    	}]
+		    }
+        }
+        });
+
+    </script>
+</body>
+</html>

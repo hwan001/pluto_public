@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+<head>
+    {% include 'head.html' %}
+    <script> 
+        var url = '{{url}}';
+        var id = '{{id}}';
+    </script>
+</head>
+
+<body class="bg-white">
+    {% include 'header.html' %}
+
+    <div class="graph3">
+        <h2>Main Page</h2> 
+        {{id}}
+    </div>
+
+    <div class="main">
+        <ul>
+            <li><a href='/graph'>Chart</a><br></li>
+            <li><a href='/signup'>Sign Up</a><br></li>
+            <li><a href='/signin'>Sign In</a><br></li>
+        </ul>
+    </div> 
+
+    {% include 'footer.html' %}
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+<head>
+    {% include 'head.html' %}
+    <script> 
+        var tickers_len = '{{tickers_len}}';
+        var ticker = '{{ticker}}';
+        var url = '{{url}}';
+    </script>
+</head>
+
+<body class="bg-white">
+    {% include 'header.html' %}
+
+    <div class="graph3">
+        <h2>Pluto</h2> 
+        Stock Count : {{tickers_len}}
+    </div>
+
+    {% for ticker in tickers %}
+    <div class="graph2">
+        Ticker : {{ticker}}  
+        <canvas id="{{ticker}}"></canvas>
+    </div>
+    {% endfor %}
+
+    <!-- 차트 -->
+    <script>
+        var tickers = "{{tickers}}".replace("[", "").replace("]", "").replace(" ", "").split(",");
+        var arr_data = [[1, 2, 3], [3, 4, 5], [1, 2, 3]];
+        
+        for (var i=0; i<tickers_len; i++){
+            var chart = new Chart(document.getElementById(tickers[i]).getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: ['1', '2', '3'],
+                datasets: [{
+                label: tickers[i], //"Closing price",
+                backgroundColor: 'transparent',
+                borderColor: 'aliceblue',
+                data: arr_data[i],
+                }]
+            },
+            options: {
+                scales: {
+		    		yAxes: [{
+		    			ticks: {
+		    				stepSize : 1,
+		    				fontSize : 12,
+		    			}
+		    		}]
+		    	}
+            }
+            });
+        }
+        
+    </script>
+    
+    {% include 'footer.html' %}
+</body>
+</html>

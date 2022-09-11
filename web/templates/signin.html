@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+<head>
+    {% include 'head.html' %}
+
+    <script> 
+        var url = '{{url}}';
+    </script>
+</head>
+
+<body class="bg-white">
+    {% include 'header.html' %}
+    <!--div class="graph3">
+        <h2>Sign In Page</h2> 
+    </div-->
+
+    <!--div class="signin">
+        <form action="{{url}}/signin?" method ="POST" >
+            <img src="/static/image/logo.png" alt="img commet"><br>
+            <input type="text" id="id" name="id"><br>
+            <input type="password" id="pw" name="pw"><br>
+            <button>Sign In</button>
+        </form>
+    </div-->
+
+    <div class="container">	
+        <!--div class="row align-items-center">
+            <h2 class="rounded mx-auto d-block">Sign in</h2>    
+        </div-->
+
+        <!--div class="row align-items-center">
+            <form action="signin" method="post">
+                <div class="mb-3">
+                    <label class="form-label" for="id">Username or email address</label> 
+                    <input class="form-control col-6" type="text" name="id" id="id" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="pw">Password</label> 
+                    <input class="form-control col-6" type="password" name="pw" id="pw" />
+                </div>
+                <button class="btn btn-primary btn-sm mx-auto gap-2" type="submit">Sign In</button> 
+            </form>
+        </div>
+
+
+        <form>
+            <div class="mb-3">
+              <label for="exampleInputEmail1" class="form-label">Username or email address</label>
+              <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+              <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+            </div>
+            <div class="mb-3 align-items-center">
+              <label for="exampleInputPassword1" class="form-label">Password</label>
+              <input type="password" class="form-control" id="exampleInputPassword1">
+            </div>
+            <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" id="exampleCheck1">
+              <label class="form-check-label" for="exampleCheck1">Check me out</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form-->
+          
+        <div class="modal-dialog" role="document">
+            <div class="modal-content rounded-5 shadow">
+              <div class="modal-header p-5 pb-4 border-bottom-0">
+                <h2 class="fw-bold mb-0">Sign in for Pluto</h2>
+              </div>
+
+              <div class="row align-items-center">
+                <img src="/static/image/sign_in_logo.png" class="img-fluid rounded mx-auto d-block" alt="This is Pluto">
+              </div>
+    
+              
+              <div class="modal-body p-5 pt-0">
+                <form class="" action="signin" method="post">
+                  <div class="form-floating mb-3">
+                    <input type="email" class="form-control rounded-4" id="floatingInput" placeholder="name@example.com" name="id">
+                    <label for="floatingInput">Email address</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                    <input type="password" class="form-control rounded-4" id="floatingPassword" placeholder="Password" name="pw">
+                    <label for="floatingPassword">Password</label>
+                  </div>
+    
+                  <button class="w-100 mb-2 btn btn-lg rounded-4 btn-primary" type="submit">Sign in</button>
+                  
+                </form>
+              </div>
+            </div>
+          </div>
+
+    </div>
+    
+    {% include 'footer.html' %} 
+</body>
+</html>
