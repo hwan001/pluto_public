@@ -2,8 +2,10 @@ import random
 from datetime import datetime, timedelta
 from urllib.parse import uses_netloc
 
+import json
 from flask import Flask
-from flask import request, render_template, make_response, jsonify, session, redirect, url_for
+#from flask_restx import Api, Resource
+from flask import request, render_template, make_response, jsonify, session, redirect, url_for, escape
 from flask_cors import CORS # 외부 접속 가능하게 해줌
 
 import yfinance as yf
@@ -16,6 +18,9 @@ from plutodb import PlutoDB
 app = Flask(__name__)
 database = PlutoDB(config.db_server, config.db_id, config.db_pw)
 app.secret_key = config.secret_key
+app.config['SESSION_LIMIT_EXCEPTION'] = True
+app.config['SESSION_COOKIE_LIMIT'] = 1
+
 
 # 여러 함수를 import 하는 용도의 빈 클래스? 
 # git  허브 코드 참고하여 작성 중 (용도 모름)
@@ -49,8 +54,8 @@ def create_app(test_config = None):
 
 
 @app.route('/')
-def main():
-    if session['id'] is None:
+def main():    
+    if 'id' not in session:
         return '<script>window.location.href="/signin";</script>'
 
     return render_template('main.html')
@@ -119,7 +124,6 @@ def graph():
 
     if request.method == 'POST':
         try:
-            # 폼에서 정보를 받아옴
             ticker = request.form.get("ticker")
             startdate = request.form.get("startdate")
             #enddate = request.form.get("enddate")
@@ -129,15 +133,15 @@ def graph():
             
             yf_Ticker = yf.Ticker(ticker)
             
-            # yfinance로 해당 티커의 정보를 가져옴
             ticker_data = yf_Ticker.history(start=startdate, end=enddate, interval=interval)[kind]
             ticker_index = (lambda origin: [str(tmp.strftime("%Y-%m-%d")) for tmp in list(origin.index)])(ticker_data)
             ticker_value = (lambda origin: [round(tmp, 2) for tmp in list(origin.values)])(ticker_data)
-            
-            # 한 칸의 간격
             aver_step = (max(ticker_value) - min(ticker_value)) / len(ticker_value)
-        except:
-            return render_template('error_500.html')
+            
+            ticker_index_str = json.dumps(ticker_index)
+            ticker_value_str = json.dumps(ticker_value)
+        except Exception as e:
+            return render_template('error_500.html', ticker=ticker, exception_msg=e)   
         
     elif request.method == 'GET':
         ticker = ""
@@ -145,7 +149,10 @@ def graph():
         ticker_value = []
         aver_step = 0
         
-    return render_template('graph.html', ticker=ticker, ticker_index=ticker_index, ticker_value=ticker_value, aver_step=aver_step)
+        ticker_index_str = json.dumps(ticker_index)
+        ticker_value_str = json.dumps(ticker_value)
+        
+    return render_template('graph.html', ticker=ticker, ticker_index=ticker_index_str, ticker_value=ticker_value_str, aver_step=aver_step)
 
 
 
