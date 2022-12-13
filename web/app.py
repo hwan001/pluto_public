@@ -140,6 +140,7 @@ def graph():
             
             ticker_index_str = json.dumps(ticker_index)
             ticker_value_str = json.dumps(ticker_value)
+            
         except Exception as e:
             return render_template('error_500.html', ticker=ticker, exception_msg=e)   
         
