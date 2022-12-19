@@ -13,9 +13,9 @@ current_ticker_price_table = {
 userdata_table = {
     "hwan001":{
         "GOOGL":{
-            "number_of_stock":100, 
+            "number_of_stock":102, 
             "average_price":124.76,
-            "total_amount": 12476,
+            "total_amount": 12725.52,
             "total_profit":0,
         }, 
         "MO":{
@@ -59,7 +59,7 @@ def TM_ALGO_2(보유주식수:int, 평균단가:float, 현재주가:float) -> li
     return 추매주식수, 손실률
 
 
-# 트레이딩 모듈 사용해서 결과를 업데이트해줄 데코레이터(미완)
+# 트레이딩 모듈 사용해서 결과를 업데이트해줄 데코레이터
 def TM_Decorator(username:str = "", ticker:str = "") -> dict:
     '''
     input : number_of_stock, average_price 
@@ -93,6 +93,7 @@ def TM_Decorator(username:str = "", ticker:str = "") -> dict:
     #print(f"-> 예상 주수 : {total_number_of_stock}주, 예상 평단 : ${predict_average_price}, 손실률 : {round(손실률*100, 2)}%")
     
     
+
 username = "test"
 userticker = "U"
 values = [43.2, 36.3, 41.5, 45.6, 46.7, 49.3, 43.5, 50.1, 52.3, 56.5, 60]

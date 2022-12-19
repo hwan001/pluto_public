@@ -12,13 +12,13 @@
 <body class="bg-white">
     {% include 'header.html' %}
 
-    <div class="graph3">
+    <!-- div class="graph3">
         <h2>Pluto Stock Recommand - {{ticker}}</h2> 
-    </div>
+    </div -->
 
     <div class="container">
 
-        <div class="align-items-center">
+        <div class="align-items-center" style="padding: 5px;" >
             <form action="{{url}}/graph" method ="POST">
                 시작일 : 
                 <input type="edit" id="startdate" name="startdate">
@@ -43,7 +43,7 @@
         </div> 
 
         <div class="align-items-center">
-            Ticker : {{ticker}}  
+            <h2>{{ticker}}</h2>  
             <canvas id="{{ticker}}"></canvas>
         </div>
     </div>
@@ -52,9 +52,9 @@
 
     <!-- 차트 -->
     <script>
-        var ticker_index = "{{ ticker_index|safe }}".replace("[", "").replace("]", "").replace(" ", "").split(",");
-        var ticker_value = "{{ ticker_value|safe }}".replace("[", "").replace("]", "").replace(" ", "").split(",");
-        var aver_step = "{{aver_step}}"
+        var ticker_index = JSON.parse('{{ ticker_index | safe }}');
+        var ticker_value = JSON.parse('{{ ticker_value | safe }}'); //"{{ ticker_value }}".replace("[", "").replace("]", "").replace(" ", "").split(",");
+        var aver_step = "{{ aver_step }}"
 
         var chart = new Chart(document.getElementById(ticker).getContext('2d'), {
         type: 'line',
@@ -63,7 +63,7 @@
             datasets: [{
             label: 'Close Price',
             backgroundColor: 'transparent',
-            borderColor: 'gold',
+            borderColor: 'blue',
             data: ticker_value,
             }]
         },
