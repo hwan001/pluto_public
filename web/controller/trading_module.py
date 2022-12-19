@@ -59,8 +59,9 @@ def TM_ALGO_2(보유주식수:int, 평균단가:float, 현재주가:float) -> li
     return 추매주식수, 손실률
 
 
-# 트레이딩 모듈 사용해서 결과를 업데이트해줄 데코레이터
-def TM_Decorator(username:str = "", ticker:str = "") -> dict:
+
+# 트레이딩 모듈 사용해서 결과를 업데이트해줄 함수
+def TM_Function(function_name:str, username:str = "", ticker:str = "") -> dict:
     '''
     input : number_of_stock, average_price 
     output : {"total_profit":float, "number_of_stock":int, "expected_average_price":float}
@@ -77,8 +78,11 @@ def TM_Decorator(username:str = "", ticker:str = "") -> dict:
     average_price = userdata_table[username][ticker]["average_price"]
     total_sum = userdata_table[username][ticker]["total_amount"]
     
-    # 알고리즘 계산 결과
-    additional_stock, 손실률 = TM_ALGO_2(number_of_stock, average_price, current_price) 
+    # 알고리즘 계산 결과 -> 함수명을 선택해서 실행하려면? eval?
+    #function_name = "TM_ALGO_2"
+    #if function_name not in DB: return False # 이부분을 DB로 조회해서 없으면 종료
+    additional_stock, 손실률 = eval(f"{function_name}(number_of_stock, average_price, current_price)")
+    #additional_stock, 손실률 = TM_ALGO_2(number_of_stock, average_price, current_price) 
     
     # 반영
     total_number_of_stock = number_of_stock + additional_stock
@@ -92,7 +96,6 @@ def TM_Decorator(username:str = "", ticker:str = "") -> dict:
     #print(f"현재 주가 : ${current_price}, 보유 개수 : {number_of_stock}주, 내 평단 : {average_price}, 추가 구매 : {additional_stock}")
     #print(f"-> 예상 주수 : {total_number_of_stock}주, 예상 평단 : ${predict_average_price}, 손실률 : {round(손실률*100, 2)}%")
     
-    
 
 username = "test"
 userticker = "U"
@@ -104,6 +107,6 @@ print(current_ticker_price_table[userticker], userdata_table[username][userticke
 for i in range(len(values)):
     print("Trade " + str(i+1) + " : ", end='')
     current_ticker_price_table[userticker] = values[i]
-    TM_Decorator(username, userticker)
+    TM_Function("TM_ALGO_2", username, userticker)
     print(current_ticker_price_table[userticker], userdata_table[username][userticker], format(int(round(userdata_table[username][userticker]["total_amount"] * exchange_rate, 0)), ','), "원")
     
