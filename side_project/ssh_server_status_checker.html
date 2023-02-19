@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <script src="static/js/jquery-3.6.3.js"></script>
+    <link rel="stylesheet" href="test.css">
+    <meta charset="UTF-8">
+    <title>SSH Server Status Checker</title>
+
+    <script>
+        var timerId = null;
+        var max_serverCount = localStorage.getItem('max_serverCount');
+        const server_url = "http://127.0.0.1:8000";
+
+        function set_ServerCount(){
+            max_serverCount = $('#text_server_count').val();
+            localStorage.setItem('max_serverCount', max_serverCount);
+            window.location.reload();
+        }
+
+        function statusTimer() {
+            for(var i = 1; i <= max_serverCount; i += 1){
+                sshServer_statusCheck("server" + i);
+            }
+        }
+        
+        function StartClock(interval=5000) {
+            timerId = setInterval(statusTimer, interval);
+            statusTimer();
+        }
+        
+        function StopClock() {
+            if(timerId != null) {
+                clearInterval(timerId);
+            }
+        }
+
+        function sshServer_statusCheck(target){
+            var html_result_id = target + "_status_result";
+            var server_ip = $('#text_' + target + '_ip').val();
+            var server_port = $('#text_' + target + '_port').val();
+            var server_id = $('#text_' + target + '_id').val();
+            var server_pw = $('#text_' + target + '_pw').val();
+            //alert(html_result_id, server_ip, server_port);
+            var send_data = {
+                key: target,
+                ip: server_ip,
+                port: server_port,
+                id: server_id,
+                pw: server_pw,
+            };
+
+            $('#' + html_result_id).html("Work in progress.", status);
+            document.getElementById(html_result_id).style.color = "#FFEE11";
+
+            $.ajaxSetup({'cache':true});
+            $.ajax({
+                url : server_url + "/statusCheck",
+                type : "POST",
+                dataType : "json",
+                timeout : 3000,
+                contentType : "application/json",
+                data : JSON.stringify(send_data),
+                success: function(data){
+                    $('#' + html_result_id).html(data.status, status);
+                    if(data.status == "ok"){
+                        document.getElementById(html_result_id).style.color = "green";
+                    }
+                    else{
+                        document.getElementById(html_result_id).style.color = "red";
+                    }
+                },
+                error: function(request, status, error){
+                    if(error == "timeout"){
+                        $('#' + html_result_id).html(status, 200);
+                        document.getElementById(html_result_id).style.color = "red";
+                    }
+                }
+            })
+            .fail(function(xhr, textStatus, errorThrown) {
+                if ($('#' + html_result_id).text() == "Work in progress."){
+                    $('#' + html_result_id).html("Fail", status);
+                    document.getElementById(html_result_id).style.color = "red";
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <h3>SSH Server Status Checker</h3>
+    <form class="my-box">
+        <div>
+            <label><b>Server Count : </b></label> <input type="text" placeholder="number" id="text_server_count" style="width: 50px;"> <input type="button" value="set" onclick="set_ServerCount();"><br>
+            <hr>
+            <label><b>Input Data</b></label><br>
+            <script>
+                var tmp_value;
+
+                for(var i = 1; i <= max_serverCount; i += 1){
+                    tmp_value = "server" + i;
+                    document.write('<label>' + tmp_value + ' Settings : </label>');
+                    document.write('<input type="text" id="text_' + tmp_value + '_ip" placeholder="IP Address" style="width: 100px;"> ');
+                    document.write('<input type="text" id="text_' + tmp_value + '_port" placeholder="Port" style="width: 50px;"> ');
+                    document.write('<input type="text" id="text_' + tmp_value + '_id" placeholder="ID" style="width: 50px;"> ');
+                    document.write('<input type="password" id="text_' + tmp_value + '_pw" placeholder="PW" style="width: 50px;"> ');
+                    document.write('<input type="button" value="check" onclick="sshServer_statusCheck(' + "'" + tmp_value + "'" + ');"> ');
+                    document.write('<br>');
+                }
+            </script>
+        </div>
+        <hr>
+        <label><b>Connection Status</b></label><br>
+        <script>
+            for(var i = 1; i <= max_serverCount; i += 1){
+                tmp_value = "server" + i;
+                document.write('<label>' + tmp_value + ' : </label><label id="server' + i + '_status_result"></label><br>');
+            }
+        </script>
+        <label>Repeat check : </label>
+        <input type="button" value="Start" onclick="StartClock(10000);">
+        <input type="button" value="End" onclick="StopClock();">
+    </form>
+    <br>
+    <br>
+</body>
+</html>
